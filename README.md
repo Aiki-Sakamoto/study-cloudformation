@@ -1,0 +1,1 @@
+# CloudFormationを学習した時の記録
