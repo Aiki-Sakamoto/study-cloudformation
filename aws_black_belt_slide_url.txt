@@ -1,0 +1,2 @@
+URL
+https://www.slideshare.net/AmazonWebServicesJapan/aws-black-belt-online-seminar-2016-aws-cloudformation
