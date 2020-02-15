@@ -1,11 +1,11 @@
 # AWSテンプレートのバージョン 2020年1月現在はこれで固定
 AWSTemplateFormatVersion: "2010-09-09"
 # テンプレートの説明 実行時に表示されるので書いたほうがいい
-Description: RaiseTech deploy-live-demo Rails Tutorial template
+Description: RaiseTech Rails Tutorial template
 
 # VPCの作成
 Resources: 
-  vpc001cb30c148fea2c7: 
+  RailsTutorialVPC: 
     Type: "AWS::EC2::VPC"
     Properties:
       CidrBlock: 10.0.0.0/16
@@ -14,50 +14,49 @@ Resources:
       EnableDnsHostnames: "true"
       Tags:
       - Key: "Name"
-        Value: "aws-deploy-live-demo"
+        Value: "cfn-rails-tutorial"
 
   # サブネット定義
-  subnet07fe47072981473fd:
+  RailsTutorialSubnetPrivate1a:
       Type: "AWS::EC2::Subnet"
       Properties:
         CidrBlock: 10.0.2.0/24
         AvailabilityZone: "ap-northeast-1a"
         VpcId:
-          Ref: "vpc001cb30c148fea2c7"
+          Ref: "RailsTutorialVPC"
         Tags:
         - Key: "Name"
-          Value: "private-subnet-1a"
+          Value: "cfn-private-subnet-1a"
 
-  subnet04e0bc24795b2ee8a: 
+  RailsTutorialSubnetPrivate1c: 
     Type: "AWS::EC2::Subnet"
     Properties: 
-      CiderBlock: 10.0.3.0/24
+      CidrBlock: 10.0.3.0/24
       AvailabilityZone: "ap-northeast-1c"
       VpcId: 
-        Ref: "vpc001cb30c148fea2c7"
+        Ref: "RailsTutorialVPC"
       Tags: 
       - Key: "Name"
-        Value: "private-subnet-1c"
+        Value: "cfn-private-subnet-1c"
 
-  subnet0e7a6bab84fabe653:
+  RailsTutorialSubnetPublic1a:
       Type: "AWS::EC2::Subnet"
       Properties:
         CidrBlock: 10.0.0.0/24
         AvailabilityZone: "ap-northeast-1a"
         VpcId:
-          Ref: "vpc001cb30c148fea2c7"
+          Ref: "RailsTutorialVPC"
         Tags:
           - Key: "Name"
-            Value: "public-subnet-1a"
+            Value: "cfn-public-subnet-1a"
 
-  subnet0f9be3a04c782f494:
+  RailsTutorialSubnetPublic1c:
       Type: "AWS::EC2::Subnet"
       Properties:
         CidrBlock: 10.0.1.0/24
         AvailabilityZone: "ap-northeast-1c"
         VpcId:
-          Ref: "vpc001cb30c148fea2c7"
+          Ref: "RailsTutorialVPC"
         Tags:
         - Key: "Name"
-          Value: "public-subnet-1c"
-
+          Value: "cfn-public-subnet-1c"
