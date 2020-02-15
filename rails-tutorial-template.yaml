@@ -125,7 +125,7 @@ Resources:
       NetworkAclId:
         Ref: RailsTutorialNetworkAcl
 
-  # ネットワークACLをサブネットへの関連付け
+  # ネットワークACLをサブネットへ関連付け
   # ap-northeast-1a
   RailsTutorialSubnetNetworkAclAssociationApNorthEast1aPrivate1a:
     Type: AWS::EC2::SubnetNetworkAclAssociation
@@ -157,4 +157,34 @@ Resources:
       SubnetId:
         Ref: RailsTutorialSubnetPublic1c
 
+  # ルートテーブルの定義
+  RailsTutorialRouteTable: 
+    Type: AWS::EC2::RouteTable
+    Properties: 
+      VpcId:  
+        Ref: RailsTutorialVPC
+      Tags: 
+        - Key: Name
+          Value: cfn-rails-tutorial-route-table
+  
+  # ルートテーブルにインターネットゲートウェイの設定をする
+  RailsTutorialGatewayToInternetRouting: 
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: 0.0.0.0/0
+      RouteTableId: 
+        Ref: RailsTutorialRouteTable
+      GatewayId: 
+        Ref: RailsTutorialInternetGateway
+    # 先にインターネットゲートウェイをVPCとアタッチさせてから動作させる
+    DependsOn: RailsTutorialInternetGatewayAttachment
+
+  # ルートテーブルとサブネット(ap-northeast-1a-public1a)の関連付け
+  RailsTutorialSubnetRouteTableAssociationApNorthEast1aPublic1a: 
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId: 
+        Ref: RailsTutorialRouteTable
+      SubnetId: 
+        Ref: RailsTutorialSubnetPublic1a
 
