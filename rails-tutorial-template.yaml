@@ -1,10 +1,11 @@
 # AWSテンプレートのバージョン 2020年1月現在はこれで固定
 AWSTemplateFormatVersion: "2010-09-09"
 # テンプレートの説明 実行時に表示されるので書いたほうがいい
-Description: RaiseTech Rails Tutorial template
+Description: RailsTutorial CloudFormation template
 
-# VPCの作成
-Resources: 
+# AWSの各リソースを定義
+Resources:
+  # VPCの作成
   RailsTutorialVPC: 
     Type: "AWS::EC2::VPC"
     Properties:
@@ -16,17 +17,17 @@ Resources:
       - Key: "Name"
         Value: "cfn-rails-tutorial"
 
-  # サブネット定義
+  # プライベートサブネットの定義
   RailsTutorialSubnetPrivate1a:
-      Type: "AWS::EC2::Subnet"
-      Properties:
-        CidrBlock: 10.0.2.0/24
-        AvailabilityZone: "ap-northeast-1a"
-        VpcId:
-          Ref: "RailsTutorialVPC"
-        Tags:
-        - Key: "Name"
-          Value: "cfn-private-subnet-1a"
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: "ap-northeast-1a"
+      VpcId:
+        Ref: "RailsTutorialVPC"
+      Tags:
+      - Key: "Name"
+        Value: "cfn-private-subnet-1a"
 
   RailsTutorialSubnetPrivate1c: 
     Type: "AWS::EC2::Subnet"
@@ -39,24 +40,25 @@ Resources:
       - Key: "Name"
         Value: "cfn-private-subnet-1c"
 
+  # パブリックサブネットの定義
   RailsTutorialSubnetPublic1a:
-      Type: "AWS::EC2::Subnet"
-      Properties:
-        CidrBlock: 10.0.0.0/24
-        AvailabilityZone: "ap-northeast-1a"
-        VpcId:
-          Ref: "RailsTutorialVPC"
-        Tags:
-          - Key: "Name"
-            Value: "cfn-public-subnet-1a"
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      AvailabilityZone: "ap-northeast-1a"
+      VpcId:
+        Ref: "RailsTutorialVPC"
+      Tags:
+        - Key: "Name"
+          Value: "cfn-public-subnet-1a"
 
   RailsTutorialSubnetPublic1c:
-      Type: "AWS::EC2::Subnet"
-      Properties:
-        CidrBlock: 10.0.1.0/24
-        AvailabilityZone: "ap-northeast-1c"
-        VpcId:
-          Ref: "RailsTutorialVPC"
-        Tags:
-        - Key: "Name"
-          Value: "cfn-public-subnet-1c"
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: "ap-northeast-1c"
+      VpcId:
+        Ref: "RailsTutorialVPC"
+      Tags:
+      - Key: "Name"
+        Value: "cfn-public-subnet-1c"
