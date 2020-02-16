@@ -1,0 +1,86 @@
+# AWSテンプレートのバージョン 2020年1月現在はこれで固定
+AWSTemplateFormatVersion: "2010-09-09"
+# テンプレートの説明 実行時に表示されるので書いたほうがいい
+Description: RailsTutorial CloudFormation template
+
+# AWSの各リソースを定義
+Resources: 
+  # ALB用のセキュリティグループの定義
+  RailsTutorialSecurityGroupForALB: 
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: cfn-rails-tutorial-sg-alb
+      VpcId: 
+        # rails-tutorial-template.yamlから出力された値を入力
+        Fn::ImportValue: cfn-rails-tutorial-vpc
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress: 
+      - IpProtocol: "-1"
+        CidrIp: 0.0.0.0/0
+      Tags: 
+      - Key: Name
+        Value: cfn-rails-tutorial-sg-for-alb
+
+  # EC2インスタンスへアクセスを割り振るALBの定義
+  RailsTutorialALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties: 
+      IpAddressType: ipv4
+      Name: cfn-rails-tutorial-alb
+      # 外部向けのロードバランサーであることを明記
+      Scheme: internet-facing
+      SecurityGroups: 
+        - Ref: RailsTutorialSecurityGroupForALB
+      # rails-tutorial-template.yamlから出力された値の
+      # サブネットID2つをインポートして定義
+      Subnets: 
+      - Fn::ImportValue: cfn-rails-tutorial-public-subnet-1a
+      - Fn::ImportValue: cfn-rails-tutorial-public-subnet-1c
+      # ALBであることを明記
+      Type: application
+
+  # ALBのターゲットグループを定義
+  RailsTutorialALBTergetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties: 
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: /
+      HealthCheckPort: traffic-port
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      Matcher: 
+        HttpCode: 200 
+      Name: cfn-rails-tutorial-target-group
+      Port: 80
+      Protocol: HTTP
+      TargetGroupAttributes: 
+      - Key: deregistration_delay.timeout_seconds 
+        Value: 300 
+      - Key: stickiness.enabled 
+        Value: false 
+      - Key: stickiness.type 
+        Value: lb_cookie 
+      - Key: stickiness.lb_cookie.duration_seconds 
+        Value: 86400 
+      UnhealthyThresholdCount: 2
+      VpcId: 
+        # rails-tutorial-template.yamlから出力された値を入力
+        Fn::ImportValue: cfn-rails-tutorial-vpc
+
+  # ALBリスナーを定義
+  RailsTutorialALBListener: 
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties: 
+      DefaultActions: 
+      - Type: forward
+        TargetGroupArn: 
+          Ref: RailsTutorialALBTergetGroup
+      LoadBalancerArn: 
+        Ref: RailsTutorialALB
+      Port: 80
+      Protocol: HTTP
