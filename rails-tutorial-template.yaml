@@ -220,25 +220,6 @@ Resources:
       - Key: Name
         Value: cfn-rails-tutorial-sg-for-ec2
 
-  # ALB用のセキュリティグループの定義
-  RailsTutorialSecurityGroupForALB: 
-    Type: AWS::EC2::SecurityGroup
-    Properties: 
-      GroupDescription: cfn-rails-tutorial-sg-alb
-      VpcId: 
-        Ref: RailsTutorialVPC
-      SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 80
-        ToPort: 80
-        CidrIp: 0.0.0.0/0
-      SecurityGroupEgress: 
-      - IpProtocol: "-1"
-        CidrIp: 0.0.0.0/0
-      Tags: 
-      - Key: Name
-        Value: cfn-rails-tutorial-sg-for-alb
-
   # RDS用のセキュリティグループの定義
   RailsTutorialSecurityGroupForRDS: 
     Type: AWS::EC2::SecurityGroup
@@ -328,3 +309,45 @@ Resources:
       Tags: 
       - Key: Name
         Value: cfn-rails-tutorial-rds-subnet-group
+
+# ALB作成のスタックでVPCIP、サブネットIDを使用するため出力しておく
+Outputs:
+  # VPCIPの出力
+  RailsTutorialVPCID:
+    Description: The ID of the VPC ID
+    Value: 
+      Ref: RailsTutorialVPC
+    Export:
+      Name: cfn-rails-tutorial-vpc
+
+  # cfn-private-subnet-1a SubnetID
+  RailsTutorialSubnetPrivate1aID:
+    Description: The ID of the Private Subnet1a ID
+    Value: 
+      Ref: RailsTutorialSubnetPrivate1a
+    Export:
+      Name: cfn-rails-tutorial-private-subnet-1a
+
+  # cfn-private-subnet-1c SubnetID
+  RailsTutorialSubnetPrivate1cID:
+    Description: The ID of the Private Subnet1c ID
+    Value: 
+      Ref: RailsTutorialSubnetPrivate1c
+    Export:
+      Name: cfn-rails-tutorial-private-subnet-1c
+
+  # cfn-public-subnet-1a SubnetID
+  RailsTutorialSubnetPublic1aID:
+    Description: The ID of the Public Subnet1a ID
+    Value: 
+      Ref: RailsTutorialSubnetPublic1a
+    Export:
+      Name: cfn-rails-tutorial-public-subnet-1a
+
+  # cfn-private-subnet-1c SubnetID
+  RailsTutorialSubnetPublic1cID:
+    Description: The ID of the Public Subnet1a ID
+    Value: 
+      Ref: RailsTutorialSubnetPublic1c
+    Export:
+      Name: cfn-rails-tutorial-public-subnet-1c
