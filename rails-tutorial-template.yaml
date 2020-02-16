@@ -263,3 +263,29 @@ Resources:
       Tags: 
       - Key: Name
         Value: cfn-rails-tutorial-sg-for-rds
+
+  # EC2インスタンスの定義
+  RailsTutorialEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties: 
+      DisableApiTermination: false
+      InstanceInitiatedShutdownBehavior: stop
+      # ここのAMIはマネジメントコンソールから確認可能
+      # 中身はAmazonLinux2
+      ImageId: ami-0af1df87db7b650f4
+      InstanceType: t2.micro
+      KeyName: sakamoto_aiki
+      Monitoring: false
+      Tags: 
+      - Key: Name
+        Value: cfn-rails-tutorial-amazonlinux2
+      # 以下で、サブネット、セキュリティグループの指定をする
+      NetworkInterfaces: 
+      - SubnetId: 
+          Ref: RailsTutorialSubnetPublic1a
+        GroupSet: 
+        - Ref: RailsTutorialSecurityGroupForEC2
+        # 自動割り当てするデバイスインデックスを0に指定する
+        # この指定を行っていないと自動でPublicIPアドレスの割り当てができない
+        DeviceIndex: 0
+        AssociatePublicIpAddress: true
