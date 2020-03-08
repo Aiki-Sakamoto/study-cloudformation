@@ -28,3 +28,7 @@ rails-tutorial-template.yaml
 
 rails-tutorial-template-alb.yaml
 
+## TODO
+
+* ansible実行用EC2インスタンスを一台構築する
+* ansible実行用EC2インスタンス用のセキュリティグループ作成
